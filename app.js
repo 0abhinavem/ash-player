@@ -4,6 +4,20 @@
 
 // Playlist Data - Multiple Categories
 const playlists = {
+    'recently-played': [
+        { id: 17, title: "Starlight", artist: "Indie Hearts", album: "Dreamscape", duration: 223, albumArt: "assets/album1.png", audioSrc: "assets/audio1.mp3" },
+        { id: 18, title: "City Nights", artist: "Urban Chill", album: "Lo-fi Collection", duration: 189, albumArt: "assets/album5.png", audioSrc: "assets/audio5.mp3" },
+        { id: 1, title: "Midnight Dreams", artist: "Cosmic Beats", album: "Nightscape", duration: 234, albumArt: "assets/album1.png", audioSrc: "assets/audio1.mp3" },
+        { id: 14, title: "Turn It Up", artist: "DJ Vibes", album: "Party Mode", duration: 198, albumArt: "assets/album3.png", audioSrc: "assets/audio3.mp3" },
+        { id: 10, title: "Calm Thoughts", artist: "Peaceful Piano", album: "Study Time", duration: 298, albumArt: "assets/album4.png", audioSrc: "assets/audio4.mp3" }
+    ],
+    'liked-songs': [
+        { id: 2, title: "Summer Vibes", artist: "Solar Sounds", album: "Sunshine Collection", duration: 198, albumArt: "assets/album2.png", audioSrc: "assets/audio2.mp3" },
+        { id: 3, title: "Neon Lights", artist: "Retro Wave", album: "Synthwave Dreams", duration: 267, albumArt: "assets/album3.png", audioSrc: "assets/audio3.mp3" },
+        { id: 13, title: "Dance All Night", artist: "Party Starters", album: "Club Hits", duration: 215, albumArt: "assets/album2.png", audioSrc: "assets/audio2.mp3" },
+        { id: 11, title: "Deep Work", artist: "Lo-fi Study", album: "Productivity", duration: 256, albumArt: "assets/album5.png", audioSrc: "assets/audio5.mp3" },
+        { id: 4, title: "Ocean Waves", artist: "Nature Sounds", album: "Ambient Journey", duration: 312, albumArt: "assets/album4.png", audioSrc: "assets/audio4.mp3" }
+    ],
     'chill-vibes': [
         { id: 1, title: "Midnight Dreams", artist: "Cosmic Beats", album: "Nightscape", duration: 234, albumArt: "assets/album1.png", audioSrc: "assets/audio1.mp3" },
         { id: 2, title: "Summer Vibes", artist: "Solar Sounds", album: "Sunshine Collection", duration: 198, albumArt: "assets/album2.png", audioSrc: "assets/audio2.mp3" },
@@ -25,7 +39,7 @@ const playlists = {
     'party-anthems': [
         { id: 13, title: "Dance All Night", artist: "Party Starters", album: "Club Hits", duration: 215, albumArt: "assets/album2.png", audioSrc: "assets/audio2.mp3" },
         { id: 14, title: "Turn It Up", artist: "DJ Vibes", album: "Party Mode", duration: 198, albumArt: "assets/album3.png", audioSrc: "assets/audio3.mp3" },
-        { id: 15, title: "Weekend Party", artist: "Club Bangers", album: "Night Out", duration: 230, albumAr: "assets/album4.png", audioSrc: "assets/audio4.mp3" },
+        { id: 15, title: "Weekend Party", artist: "Club Bangers", album: "Night Out", duration: 230, albumArt: "assets/album4.png", audioSrc: "assets/audio4.mp3" },
         { id: 16, title: "Let's Go", artist: "Party People", album: "Celebration", duration: 205, albumArt: "assets/album5.png", audioSrc: "assets/audio5.mp3" }
     ]
 };
@@ -97,6 +111,25 @@ function setupPlaylistSwitching() {
                 switchPlaylist(playlistNames[index]);
                 playlistItems.forEach(p => p.classList.remove('active'));
                 item.classList.add('active');
+            }
+        });
+    });
+
+    // Setup navigation menu items
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach((item, index) => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const navPlaylistNames = ['home', 'recently-played', 'liked-songs'];
+            const playlistName = navPlaylistNames[index];
+
+            if (playlistName && playlists[playlistName]) {
+                switchPlaylist(playlistName);
+                navItems.forEach(n => n.classList.remove('active'));
+                item.classList.add('active');
+
+                // Remove active from sidebar playlists
+                playlistItems.forEach(p => p.classList.remove('active'));
             }
         });
     });
