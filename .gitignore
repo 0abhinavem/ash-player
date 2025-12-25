@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Deployment guide (not needed in repo)
+DEPLOYMENT_GUIDE.md
