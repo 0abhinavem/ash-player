@@ -804,6 +804,91 @@ body {
 }
 
 /* ===========================
+   Mobile UI Elements
+   =========================== */
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: var(--spacing-md);
+    left: var(--spacing-md);
+    z-index: 1100;
+    width: 48px;
+    height: 48px;
+    border: none;
+    background: var(--color-bg-elevated);
+    color: var(--color-text-primary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+}
+
+.mobile-menu-toggle svg {
+    width: 24px;
+    height: 24px;
+}
+
+.mobile-menu-toggle:hover {
+    background: var(--color-bg-tertiary);
+    transform: scale(1.05);
+}
+
+/* Mobile Backdrop */
+.mobile-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.mobile-backdrop.active {
+    opacity: 1;
+}
+
+/* Install Button */
+.install-button {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-md);
+    margin-right: var(--spacing-sm);
+}
+
+.install-button svg {
+    width: 18px;
+    height: 18px;
+}
+
+.install-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+}
+
+.install-button:active {
+    transform: translateY(0);
+}
+
+/* ===========================
    Responsive Design
    =========================== */
 
@@ -818,22 +903,72 @@ body {
 }
 
 @media (max-width: 768px) {
-    .app-container {
-        flex-direction: column;
-        padding-bottom: 120px;
+
+    /* Show mobile menu toggle */
+    .mobile-menu-toggle {
+        display: flex;
     }
 
+    /* Hide sidebar by default on mobile */
     .sidebar {
-        width: 100%;
-        max-height: 40vh;
-        border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 280px;
+        max-height: 100vh;
+        height: 100vh;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: none;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform var(--transition-base);
     }
 
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .mobile-backdrop {
+        display: block;
+    }
+
+    /* Main content takes full width */
+    .main-content {
+        width: 100%;
+        padding: calc(var(--spacing-lg) + 48px) var(--spacing-md) var(--spacing-md);
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+
+    .header-title {
+        font-size: var(--font-size-xl);
+    }
+
+    .user-menu {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .install-button {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .install-button span {
+        display: none;
+    }
+
+    /* Hero section mobile optimizations */
     .now-playing-hero {
         flex-direction: column;
         align-items: center;
         text-align: center;
+        padding: var(--spacing-md);
     }
 
     .hero-artwork {
@@ -841,6 +976,11 @@ body {
         height: 250px;
     }
 
+    .hero-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    /* Player bar mobile layout */
     .player-bar {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto auto;
@@ -849,21 +989,61 @@ body {
         gap: var(--spacing-md);
     }
 
+    .player-track-info {
+        order: 1;
+    }
+
+    .player-controls {
+        order: 2;
+    }
+
     .player-volume {
+        order: 3;
         justify-content: center;
     }
 
+    /* Track list mobile optimizations */
     .track-item {
         grid-template-columns: 40px 50px 1fr auto;
         gap: var(--spacing-sm);
+        padding: var(--spacing-sm);
     }
 
     .track-actions {
-        display: none;
+        opacity: 1;
+    }
+
+    /* Larger touch targets */
+    .btn-control {
+        width: 44px;
+        height: 44px;
+    }
+
+    .btn-play {
+        width: 56px;
+        height: 56px;
+    }
+
+    .btn-like {
+        width: 44px;
+        height: 44px;
+    }
+
+    /* Adjust spacing */
+    .app-container {
+        padding-bottom: 140px;
     }
 }
 
 @media (max-width: 480px) {
+    .main-content {
+        padding: calc(var(--spacing-md) + 48px) var(--spacing-sm) var(--spacing-sm);
+    }
+
+    .header-title {
+        font-size: var(--font-size-lg);
+    }
+
     .hero-artwork {
         width: 200px;
         height: 200px;
@@ -873,23 +1053,130 @@ body {
         font-size: var(--font-size-xl);
     }
 
+    .hero-artist {
+        font-size: var(--font-size-base);
+    }
+
+    /* Compact track list */
     .track-item {
         grid-template-columns: 40px 1fr auto;
-        gap: var(--spacing-sm);
+        gap: var(--spacing-xs);
         padding: var(--spacing-xs) var(--spacing-sm);
     }
 
     .track-album-art {
-        width: 40px;
-        height: 40px;
+        display: none;
     }
 
     .track-number {
         font-size: var(--font-size-xs);
     }
 
+    .track-title {
+        font-size: var(--font-size-sm);
+    }
+
+    .track-artist {
+        font-size: var(--font-size-xs);
+    }
+
+    /* Player bar compact */
+    .player-bar {
+        padding: var(--spacing-sm);
+    }
+
+    .player-album-thumb {
+        width: 50px;
+        height: 50px;
+    }
+
+    .player-title {
+        font-size: var(--font-size-xs);
+    }
+
+    .player-artist {
+        font-size: 0.7rem;
+    }
+
     .volume-slider {
         width: 80px;
+    }
+
+    /* Smaller control buttons on very small screens */
+    .control-buttons {
+        gap: var(--spacing-sm);
+    }
+
+    .btn-control {
+        width: 40px;
+        height: 40px;
+    }
+
+    .btn-control svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .btn-play {
+        width: 52px;
+        height: 52px;
+    }
+
+    .btn-play svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    /* Profile dropdown mobile adjustments */
+    .profile-dropdown {
+        width: 240px;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%) translateY(-10px);
+    }
+
+    .user-profile.active .profile-dropdown {
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Landscape mobile optimizations */
+@media (max-width: 768px) and (orientation: landscape) {
+    .now-playing-hero {
+        flex-direction: row;
+        text-align: left;
+    }
+
+    .hero-artwork {
+        width: 150px;
+        height: 150px;
+    }
+
+    .hero-title {
+        font-size: var(--font-size-xl);
+    }
+
+    .app-container {
+        padding-bottom: 100px;
+    }
+
+    .player-bar {
+        grid-template-columns: 1fr 2fr 1fr;
+        grid-template-rows: auto;
+        height: 100px;
+    }
+
+    .player-track-info {
+        order: 1;
+    }
+
+    .player-controls {
+        order: 2;
+    }
+
+    .player-volume {
+        order: 3;
+        justify-content: flex-end;
     }
 }
 

@@ -489,7 +489,200 @@ function formatTime(seconds) {
 }
 
 // ===========================
+// PWA Installation
+// ===========================
+
+let deferredPrompt;
+const installButton = document.getElementById('install-button');
+
+// Capture install prompt event
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing on mobile
+    e.preventDefault();
+    // Store the event for later use
+    deferredPrompt = e;
+    // Show the install button
+    if (installButton) {
+        installButton.style.display = 'flex';
+    }
+});
+
+// Handle install button click
+if (installButton) {
+    installButton.addEventListener('click', async () => {
+        if (!deferredPrompt) {
+            return;
+        }
+
+        // Show the install prompt
+        deferredPrompt.prompt();
+
+        // Wait for the user's response
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response to install prompt: ${outcome}`);
+
+        // Clear the deferredPrompt
+        deferredPrompt = null;
+
+        // Hide the install button
+        installButton.style.display = 'none';
+    });
+}
+
+// Handle successful installation
+window.addEventListener('appinstalled', () => {
+    console.log('ASH Player was installed successfully');
+    if (installButton) {
+        installButton.style.display = 'none';
+    }
+    deferredPrompt = null;
+});
+
+// ===========================
+// Mobile Menu
+// ===========================
+
+const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+const mobileBackdrop = document.getElementById('mobile-backdrop');
+const sidebar = document.getElementById('sidebar');
+
+function openMobileMenu() {
+    sidebar.classList.add('mobile-open');
+    mobileBackdrop.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeMobileMenu() {
+    sidebar.classList.remove('mobile-open');
+    mobileBackdrop.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+if (mobileMenuToggle) {
+    mobileMenuToggle.addEventListener('click', () => {
+        if (sidebar.classList.contains('mobile-open')) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    });
+}
+
+if (mobileBackdrop) {
+    mobileBackdrop.addEventListener('click', closeMobileMenu);
+}
+
+// Close mobile menu when clicking on navigation items
+if (sidebar) {
+    const sidebarLinks = sidebar.querySelectorAll('.nav-item, .playlist-item');
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            // Only close on mobile
+            if (window.innerWidth <= 768) {
+                closeMobileMenu();
+            }
+        });
+    });
+}
+
+// Handle window resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        // Close mobile menu if resized to desktop
+        if (window.innerWidth > 768) {
+            closeMobileMenu();
+        }
+    }, 250);
+});
+
+// ===========================
+// Touch Support for Mobile
+// ===========================
+
+// Add touch event support for progress bar
+if (progressBar) {
+    let isTouchingSeeking = false;
+
+    progressBar.addEventListener('touchstart', (e) => {
+        isTouchingSeeking = true;
+        const touch = e.touches[0];
+        const rect = progressBar.getBoundingClientRect();
+        const percent = (touch.clientX - rect.left) / rect.width;
+        const time = percent * audio.duration;
+
+        if (!isNaN(time)) {
+            audio.currentTime = time;
+        }
+    });
+
+    progressBar.addEventListener('touchmove', (e) => {
+        if (isTouchingSeeking) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (touch.clientX - rect.left) / rect.width;
+            const time = percent * audio.duration;
+
+            if (!isNaN(time)) {
+                audio.currentTime = time;
+            }
+        }
+    });
+
+    progressBar.addEventListener('touchend', () => {
+        isTouchingSeeking = false;
+    });
+}
+
+// Add touch event support for volume slider
+if (volumeSlider) {
+    let isTouchingVolume = false;
+
+    volumeSlider.addEventListener('touchstart', (e) => {
+        isTouchingVolume = true;
+        const touch = e.touches[0];
+        const rect = volumeSlider.getBoundingClientRect();
+        const percent = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
+
+        currentVolume = percent;
+        audio.volume = currentVolume;
+        updateVolumeUI();
+    });
+
+    volumeSlider.addEventListener('touchmove', (e) => {
+        if (isTouchingVolume) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = volumeSlider.getBoundingClientRect();
+            const percent = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
+
+            currentVolume = percent;
+            audio.volume = currentVolume;
+            updateVolumeUI();
+        }
+    });
+
+    volumeSlider.addEventListener('touchend', () => {
+        isTouchingVolume = false;
+    });
+}
+
+// Prevent pull-to-refresh on mobile when interacting with player
+document.body.addEventListener('touchmove', (e) => {
+    // Allow scrolling in main content areas
+    const target = e.target;
+    const isScrollable = target.closest('.main-content, .sidebar, .track-list');
+
+    if (!isScrollable) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+// ===========================
 // Start Application
 // ===========================
 
 init();
+
