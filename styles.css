@@ -929,6 +929,7 @@ body {
         z-index: 1000;
         transform: translateX(-100%);
         transition: transform var(--transition-base);
+        overflow-y: auto;
     }
 
     .sidebar.mobile-open {
@@ -939,54 +940,69 @@ body {
         display: block;
     }
 
-    /* CRITICAL: Enable scrolling on mobile */
+    /* ========================================
+       MOBILE SCROLLING FIX - CRITICAL!
+       Using !important to override any conflicts
+       ======================================== */
+
     html {
-        height: 100%;
-        overflow: auto;
+        height: auto !important;
+        min-height: 100% !important;
+        overflow-y: scroll !important;
+        overflow-x: hidden !important;
     }
 
     body {
-        height: 100%;
-        overflow: auto;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: auto;
+        height: auto !important;
+        min-height: 100% !important;
+        overflow-y: scroll !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        position: relative !important;
     }
 
-    /* Change app container to column layout for mobile */
     .app-container {
-        flex-direction: column;
-        height: auto;
-        min-height: 100%;
-        overflow: visible;
-        padding-bottom: 180px;
-        /* Space for player bar */
+        display: block !important;
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
+        padding-bottom: 200px !important;
     }
 
-    /* Main content must be scrollable */
     .main-content {
-        width: 100%;
-        flex: 1;
-        height: auto;
-        min-height: auto;
-        overflow: visible;
-        padding: calc(var(--spacing-lg) + 48px) var(--spacing-md) var(--spacing-md);
-        padding-bottom: 50px;
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        padding: 80px 16px 50px 16px !important;
     }
 
-    /* Hero section adjustments */
     .now-playing-hero {
-        flex-shrink: 0;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: var(--spacing-md);
+        margin-bottom: 20px;
     }
 
-    /* Track section must not be cut off */
     .track-section {
-        flex-shrink: 0;
-        padding-bottom: 20px;
+        display: block !important;
+        overflow: visible !important;
+        padding-bottom: 30px !important;
     }
 
     .track-list {
-        overflow: visible;
+        display: block !important;
+        overflow: visible !important;
+    }
+
+    .track-item {
+        display: flex !important;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 12px;
     }
 
     .header {
