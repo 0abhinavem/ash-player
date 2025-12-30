@@ -669,16 +669,8 @@ if (volumeSlider) {
     });
 }
 
-// Prevent pull-to-refresh on mobile when interacting with player
-document.body.addEventListener('touchmove', (e) => {
-    // Allow scrolling in main content areas
-    const target = e.target;
-    const isScrollable = target.closest('.main-content, .sidebar, .track-list');
-
-    if (!isScrollable) {
-        e.preventDefault();
-    }
-}, { passive: false });
+// Note: Removed aggressive pull-to-refresh prevention that blocked scrolling
+// Touch events on progress bar and volume slider already have their own handlers
 
 // ===========================
 // Start Application

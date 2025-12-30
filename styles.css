@@ -933,10 +933,34 @@ body {
         display: block;
     }
 
-    /* Main content takes full width */
+    /* Main content takes full width and enables scrolling */
     .main-content {
         width: 100%;
+        height: auto;
+        min-height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        /* Smooth scrolling on iOS */
+        touch-action: pan-y;
+        /* Allow vertical scrolling */
         padding: calc(var(--spacing-lg) + 48px) var(--spacing-md) var(--spacing-md);
+        padding-bottom: 200px;
+        /* Extra space for player bar */
+    }
+
+    /* Ensure app container allows scrolling */
+    .app-container {
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Make sure body allows scrolling on mobile */
+    body {
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
     }
 
     .header {
