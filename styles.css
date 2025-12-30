@@ -71,11 +71,17 @@
     box-sizing: border-box;
 }
 
+html,
+body {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     font-family: var(--font-family);
     background: var(--color-bg-primary);
     color: var(--color-text-primary);
-    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -86,7 +92,7 @@ body {
 
 .app-container {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
     padding-bottom: 100px;
     /* Space for player bar */
     background: linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
@@ -933,34 +939,54 @@ body {
         display: block;
     }
 
-    /* Main content takes full width and enables scrolling */
-    .main-content {
-        width: 100%;
+    /* CRITICAL: Enable scrolling on mobile */
+    html {
+        height: 100%;
+        overflow: auto;
+    }
+
+    body {
+        height: 100%;
+        overflow: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: auto;
+    }
+
+    /* Change app container to column layout for mobile */
+    .app-container {
+        flex-direction: column;
         height: auto;
         min-height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
-        /* Smooth scrolling on iOS */
-        touch-action: pan-y;
-        /* Allow vertical scrolling */
+        overflow: visible;
+        padding-bottom: 180px;
+        /* Space for player bar */
+    }
+
+    /* Main content must be scrollable */
+    .main-content {
+        width: 100%;
+        flex: 1;
+        height: auto;
+        min-height: auto;
+        overflow: visible;
         padding: calc(var(--spacing-lg) + 48px) var(--spacing-md) var(--spacing-md);
-        padding-bottom: 200px;
-        /* Extra space for player bar */
+        padding-bottom: 50px;
     }
 
-    /* Ensure app container allows scrolling */
-    .app-container {
-        overflow-y: auto;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
+    /* Hero section adjustments */
+    .now-playing-hero {
+        flex-shrink: 0;
     }
 
-    /* Make sure body allows scrolling on mobile */
-    body {
-        overflow-y: auto;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
+    /* Track section must not be cut off */
+    .track-section {
+        flex-shrink: 0;
+        padding-bottom: 20px;
+    }
+
+    .track-list {
+        overflow: visible;
     }
 
     .header {
